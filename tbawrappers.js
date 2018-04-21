@@ -80,6 +80,16 @@ function getEventAwardData(eventkey, callback) {
         callback);
 }
 
+function getEventPlayoffData(eventkey, callback) {
+    var APICall = TBABaseURL + "/event/" + eventkey + "/alliances";
+    var data = $.getJSON
+        (APICall,
+        {
+            "X-TBA-Auth-Key": APIKey
+        },
+        callback);
+}
+
 function filterteamlist(teamlist1, teamlist2, eventname) {
     var matchingteams = [];
     $.each(teamlist1, function (index, element) {
@@ -220,10 +230,54 @@ function addAwardsToTeam(eventlist, teamlist, year, callback) {
     processAddAwardsToTeam(eventlist, teamlist, year, callback);
 }
 
+function AddPlayoffsToTeamObjects(playoffdata, teamlist) {
+    if (playoffdata != null) {
+        $.each(playoffdata, function (index, element) {
+            if (element.picks != null) {
+                $.each(element.picks, function (index2, element2) {
+                    $.each(teamlist, function (index3, element3) {
+                        if (element2 == element3.key) {
+                            element3.playoffdata = { level: element.status.level, status: element.status.status, name: element.name };
+                        }
+                    });
+                });
+            }
+        });
+    }
+    return teamlist;
+}
+
+function processAddPlayoffsToTeam(eventlist, teamlist, year, callback) {
+    if (eventlist[0]) {
+        var activeevent = eventlist[0];
+        eventlist.splice(0, 1);
+        console.log("Processing event Playoffs: " + year + activeevent.id);
+        getEventPlayoffData(year + activeevent.id, function (data) {
+            augmentedteamlist = AddPlayoffsToTeamObjects(data, teamlist);
+            processAddPlayoffsToTeam(eventlist, augmentedteamlist, year, callback);
+        });
+    }
+    else {
+        console.log("Done processing event Playoffs.");
+        callback(teamlist);
+    }
+}
+
+function addPlayoffsToTeam(eventlist, teamlist, year, callback) {
+    processAddPlayoffsToTeam(eventlist, teamlist, year, callback);
+}
+
+function DistrictTeamsAtDetroitStage5(districtteamdata, year, callback) {
+    var eventlist = detroiteventlist.slice(0);
+    addPlayoffsToTeam(eventlist, districtteamdata, year, function (data) {
+        callback(data);
+    });
+}
+
 function DistrictTeamsAtDetroitStage4(districtteamdata, year, callback) {
     var eventlist = detroiteventlist.slice(0);
     addAwardsToTeam(eventlist, districtteamdata, year, function (data) {
-        callback(data);
+        DistrictTeamsAtDetroitStage5(data, year, callback);
     });
 }
 

@@ -22,12 +22,16 @@
                 console.log(data);
                 $('#dump').html("");
                 $('#dump').html("<table id=\"my-table\" class=\"table table-striped table-bordered\" cellspacing=\"0\" width=\"100% \" border=\"1\"></table>");
-                $('#my-table').append("<thead><tr><th>Number</th><th>Name</th><th>Ranking</th><th>OPR</th><th>AVG RP</th><th>Division</th><th>Awards</th></tr></thead>");
+                $('#my-table').append("<thead><tr><th>Number</th><th>Name</th><th>Ranking</th><th>OPR</th><th>AVG RP</th><th>Division</th><th>Div Alliance</th><th>Div Playoff Level</th><th>Div Playoff Status</th><th>Awards</th></tr></thead>");
                 $('my-table').append("<tbody>");
                 var count = 0;
                 var totalrp = 0;
                 var totalopr = 0;
                 var totalawards = 0;
+                var totalqf = 0;
+                var totalsf = 0;
+                var totalf = 0;
+                var totalw = 0;
                 $.each(data, function (index, element) {
                     count++;
                     totalrp += element.averagerp;
@@ -40,6 +44,33 @@
                         $('<td>').text(element.averagerp),
                         $('<td>').text(element.division)
                     );
+
+                    if (element.playoffdata != null) {
+                        $tr.append(
+                            $('<td>').text(element.playoffdata.name),
+                            $('<td>').text(element.playoffdata.level),
+                            $('<td>').text(element.playoffdata.status)
+                        );
+                        totalqf++;
+                        if (element.playoffdata.level == "sf") {
+                            totalsf++;
+                        }
+                        if (element.playoffdata.level == "f") {
+                            totalsf++;
+                            totalf++;
+                        }
+                        if (element.playoffdata.level == "f" && element.playoffdata.status == "won") {
+                            totalw++;
+                        }
+                    }
+                    else {
+                        $tr.append(
+                            $('<td>').text(""),
+                            $('<td>').text(""),
+                            $('<td>').text("")
+                        );
+                    }
+
                     var awardtext = "";
                     if (element.awards != null) {
                         $.each(element.awards, function (index, element) {
@@ -57,7 +88,11 @@
                 $('#my-table').dynatable();
                 var averagerp = totalrp / count;
                 var averageopr = totalopr / count;
-                $('#stats').html("Average District RP: " + Math.floor(averagerp*100)/100 + " Average District OPR: " + Math.floor(averageopr*100)/100 + " Total Awards: " + totalawards);
+                var districtsummary = "";
+                districtsummary += "Average District RP: " + Math.floor(averagerp * 100) / 100 + " Average District OPR: " + Math.floor(averageopr * 100) / 100 + " Total Awards: " + totalawards;
+                districtsummary += "<br />";
+                districtsummary += "Division Playoff Advancement - QuarterFinalists: " + totalqf + " SemiFinalists: " + totalsf + " Finalists: " + totalf + " Winners: " + totalw;
+                $('#stats').html(districtsummary);
             });
         }
     </script>
