@@ -8,6 +8,12 @@ var detroiteventlist = [
     { name: "Archimedes", id: "arc" },
     { name: "Daly", id: "dal" },
     { name: "Darwin", id: "dar" },
+    { name: "Carver", id: "carv" },
+    { name: "Galileo", id: "gal" },
+    { name: "Hopper", id: "hop" },
+    { name: "Newton", id: "new" },
+    { name: "Roebling", id: "roe" },
+    { name: "Turing", id: "tur" },
     { name: "Tesla", id: "tes" }];
 
 function test(p1) {
