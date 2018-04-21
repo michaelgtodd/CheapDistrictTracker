@@ -70,6 +70,16 @@ function getEventOPRs(eventkey, callback) {
         callback);
 }
 
+function getEventAwardData(eventkey, callback) {
+    var APICall = TBABaseURL + "/event/" + eventkey + "/awards";
+    var data = $.getJSON
+        (APICall,
+        {
+            "X-TBA-Auth-Key": APIKey
+        },
+        callback);
+}
+
 function filterteamlist(teamlist1, teamlist2, eventname) {
     var matchingteams = [];
     $.each(teamlist1, function (index, element) {
@@ -172,10 +182,55 @@ function addOPRToTeam(eventlist, teamlist, year, callback) {
     processAddOPRToTeam(eventlist, teamlist, year, callback);
 }
 
+function AddAwardsToTeamObjects(awarddata, teamlist) {
+    if (awarddata != null) {
+        $.each(awarddata, function (index, element) {
+            $.each(element.recipient_list, function (index2, element2) {
+                $.each(teamlist, function (index3, element3) {
+                    if (element3.key == element2.team_key) {
+                        if (element3.awards == null) {
+                            element3.awards = [];
+                        }
+                        element3.awards.push(element.name);
+                    }
+                });
+            });
+        });
+    }
+    return teamlist;
+}
+
+function processAddAwardsToTeam(eventlist, teamlist, year, callback) {
+    if (eventlist[0]) {
+        var activeevent = eventlist[0];
+        eventlist.splice(0, 1);
+        console.log("Processing event Awards: " + year + activeevent.id);
+        getEventAwardData(year + activeevent.id, function (data) {
+            augmentedteamlist = AddAwardsToTeamObjects(data, teamlist);
+            processAddAwardsToTeam(eventlist, augmentedteamlist, year, callback);
+        });
+    }
+    else {
+        console.log("Done processing event Awards.");
+        callback(teamlist);
+    }
+}
+
+function addAwardsToTeam(eventlist, teamlist, year, callback) {
+    processAddAwardsToTeam(eventlist, teamlist, year, callback);
+}
+
+function DistrictTeamsAtDetroitStage4(districtteamdata, year, callback) {
+    var eventlist = detroiteventlist.slice(0);
+    addAwardsToTeam(eventlist, districtteamdata, year, function (data) {
+        callback(data);
+    });
+}
+
 function DistrictTeamsAtDetroitStage3(districtteamdata, year, callback) {
     var eventlist = detroiteventlist.slice(0);
     addOPRToTeam(eventlist, districtteamdata, year, function (data) {
-        callback(data);
+        DistrictTeamsAtDetroitStage4(data, year, callback);
     });
 }
 
