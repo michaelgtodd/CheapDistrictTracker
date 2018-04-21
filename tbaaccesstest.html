@@ -59,8 +59,14 @@
                             $('<td>').text(element.playoffdata.status)
                         );
                         totalqf++;
+                        if (element.playoffdata.level == "qf" && element.playoffdata.status == "won") {
+                            totalsf++;
+                        }
                         if (element.playoffdata.level == "sf") {
                             totalsf++;
+                        }
+                        if (element.playoffdata.level == "sf" && element.playoffdata.status == "won") {
+                            totalf++;
                         }
                         if (element.playoffdata.level == "f") {
                             totalsf++;
