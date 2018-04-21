@@ -14,7 +14,14 @@ var detroiteventlist = [
     { name: "Newton", id: "new" },
     { name: "Roebling", id: "roe" },
     { name: "Turing", id: "tur" },
-    { name: "Tesla", id: "tes" }];
+    { name: "Tesla", id: "tes" }
+];
+
+var einsteineventlist = [
+    { name: "Einstein Houston", id: "cmptx" },
+    { name: "Einstein Houston", id: "cmpmo" },
+    { name: "Einstein Detroit", id: "cmpmi" }
+];
 
 function test(p1) {
     setStatus(p1);
@@ -77,7 +84,8 @@ function getEventAwardData(eventkey, callback) {
         {
             "X-TBA-Auth-Key": APIKey
         },
-        callback);
+        callback)
+        .error(function () { callback(null); });
 }
 
 function getEventPlayoffData(eventkey, callback) {
@@ -276,6 +284,7 @@ function DistrictTeamsAtDetroitStage5(districtteamdata, year, callback) {
 
 function DistrictTeamsAtDetroitStage4(districtteamdata, year, callback) {
     var eventlist = detroiteventlist.slice(0);
+    eventlist = eventlist.concat(einsteineventlist);
     addAwardsToTeam(eventlist, districtteamdata, year, function (data) {
         DistrictTeamsAtDetroitStage5(data, year, callback);
     });
