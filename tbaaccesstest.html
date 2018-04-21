@@ -10,6 +10,12 @@
         }
     </style>
     <link rel="stylesheet" type="text/css" href="jquery.dynatable.css">
+    <script>
+        function setStatus(status) {
+            console.log(status);
+            $('#statusblock').html(status);
+        }
+    </script>
     <script src="./jquery-1.7.2.min.js"></script>
     <script src="./tbawrappers.js"></script>
     <script src="./jquery.dynatable.js"></script>
@@ -19,6 +25,7 @@
 
         function populateTeamData(district, year) {
             getDistrictTeamsAtDetroit(district, year, function (data) {
+                setStatus("Done loading data.");
                 console.log(data);
                 $('#dump').html("");
                 $('#dump').html("<table id=\"my-table\" class=\"table table-striped table-bordered\" cellspacing=\"0\" width=\"100% \" border=\"1\"></table>");
@@ -105,10 +112,11 @@
         </select>
     </div>
     <div id="selector">
-        <select id="districtchooser">
-        </select>
+        <select id="districtchooser"></select>
+        <button id="loadbutton">Load Data</button>
     </div>
     <br />
+    <div id="statusblock"></div>
     <br />
     <div id="stats"></div>
     <div id="dump"></div>
@@ -142,13 +150,13 @@
             });
             $("#districtchooser").val(district);
             $("#yearchooser").val(year);
-            populateTeamData(district, year);
             $('#districtchooser').on('change', function () {
                 district = this.value;
-                populateTeamData(district, year);
             });
             $('#yearchooser').on('change', function () {
                 year = this.value;
+            });
+            $('#loadbutton').on('click', function () {
                 populateTeamData(district, year);
             });
             console.log(data);

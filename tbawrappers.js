@@ -17,7 +17,7 @@ var detroiteventlist = [
     { name: "Tesla", id: "tes" }];
 
 function test(p1) {
-    console.log(p1);
+    setStatus(p1);
 }
 
 function getDistricts(callback) {
@@ -108,14 +108,14 @@ function processFilterTeamsAttendingEvents(matchingteams, eventlist, teamlist, y
     if (eventlist[0]) {
         var activeevent = eventlist[0];
         eventlist.splice(0, 1);
-        console.log("Processing event: " + year + activeevent.id);
+        setStatus("Processing event: " + year + activeevent.id);
         getTeamsAtEvent(year + activeevent.id, function (data) {
             matchingteams = matchingteams.concat(filterteamlist(teamlist, data, activeevent.name));
             processFilterTeamsAttendingEvents(matchingteams, eventlist, teamlist, year, callback);
         });
     }
     else {
-        console.log("Done processing events.");
+        setStatus("Done processing events.");
         callback(matchingteams);
     }
 }
@@ -142,14 +142,14 @@ function processAddRankingToTeam(eventlist, teamlist, year, callback) {
     if (eventlist[0]) {
         var activeevent = eventlist[0];
         eventlist.splice(0, 1);
-        console.log("Processing event rankings: " + year + activeevent.id);
+        setStatus("Processing event rankings: " + year + activeevent.id);
         getEventRankings(year + activeevent.id, function (data) {
             augmentedteamlist = AddRankingToTeamObjects(data, teamlist);
             processAddRankingToTeam(eventlist, augmentedteamlist, year, callback);
         });
     }
     else {
-        console.log("Done processing event rankings.");
+        setStatus("Done processing event rankings.");
         callback(teamlist);
     }
 }
@@ -176,14 +176,14 @@ function processAddOPRToTeam(eventlist, teamlist, year, callback) {
     if (eventlist[0]) {
         var activeevent = eventlist[0];
         eventlist.splice(0, 1);
-        console.log("Processing event OPRS: " + year + activeevent.id);
+        setStatus("Processing event OPRS: " + year + activeevent.id);
         getEventOPRs(year + activeevent.id, function (data) {
             augmentedteamlist = AddOPRToTeamObjects(data, teamlist);
             processAddOPRToTeam(eventlist, augmentedteamlist, year, callback);
         });
     }
     else {
-        console.log("Done processing event OPRs.");
+        setStatus("Done processing event OPRs.");
         callback(teamlist);
     }
 }
@@ -214,14 +214,14 @@ function processAddAwardsToTeam(eventlist, teamlist, year, callback) {
     if (eventlist[0]) {
         var activeevent = eventlist[0];
         eventlist.splice(0, 1);
-        console.log("Processing event Awards: " + year + activeevent.id);
+        setStatus("Processing event Awards: " + year + activeevent.id);
         getEventAwardData(year + activeevent.id, function (data) {
             augmentedteamlist = AddAwardsToTeamObjects(data, teamlist);
             processAddAwardsToTeam(eventlist, augmentedteamlist, year, callback);
         });
     }
     else {
-        console.log("Done processing event Awards.");
+        setStatus("Done processing event Awards.");
         callback(teamlist);
     }
 }
@@ -251,14 +251,14 @@ function processAddPlayoffsToTeam(eventlist, teamlist, year, callback) {
     if (eventlist[0]) {
         var activeevent = eventlist[0];
         eventlist.splice(0, 1);
-        console.log("Processing event Playoffs: " + year + activeevent.id);
+        setStatus("Processing event Playoffs: " + year + activeevent.id);
         getEventPlayoffData(year + activeevent.id, function (data) {
             augmentedteamlist = AddPlayoffsToTeamObjects(data, teamlist);
             processAddPlayoffsToTeam(eventlist, augmentedteamlist, year, callback);
         });
     }
     else {
-        console.log("Done processing event Playoffs.");
+        setStatus("Done processing event Playoffs.");
         callback(teamlist);
     }
 }
