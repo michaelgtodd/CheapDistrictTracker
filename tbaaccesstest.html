@@ -94,6 +94,7 @@
                 $('#districtchooser').append($('<option>', { value: element.abbreviation, text: element.display_name }));
             });
             $("#districtchooser").val(district);
+            $("#yearchooser").val(year);
             populateTeamData(district, year);
             $('#districtchooser').on('change', function () {
                 district = this.value;
