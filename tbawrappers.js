@@ -37,6 +37,14 @@ function getDistricts(callback) {
         callback);
 }
 
+function getPitData(callback) {
+    var APICall = "./pitdata.html";
+    var data = $.getJSON
+        (APICall,
+        null,
+        callback);
+}
+
 function getDistrictTeams(districtkey, callback) {
     var APICall = TBABaseURL + "/district/" + year + districtkey + "/teams/simple";
     var data = $.getJSON
@@ -275,10 +283,62 @@ function addPlayoffsToTeam(eventlist, teamlist, year, callback) {
     processAddPlayoffsToTeam(eventlist, teamlist, year, callback);
 }
 
+
+
+
+
+
+
+
+function AddPitsToTeamObjects(pitdata, teamlist) {
+    if (pitdata != null) {
+        $.each(teamlist, function (index, element) {
+            $.each(pitdata, function (index2, element2) {
+                if (element.key == element2.team_key) {
+                    element.pit = element2.pit;
+                }
+            });
+        });
+    }
+    return teamlist;
+}
+
+function processAddPitsToTeam(teamlist, year, callback) {
+        setStatus("Processing event Pits.");
+        getPitData(function (data) {
+            augmentedteamlist = AddPitsToTeamObjects(data, teamlist);
+            setStatus("Done processing event Pits.");
+            callback(teamlist);
+        });
+}
+
+function addPitsToTeam(teamlist, year, callback) {
+    processAddPitsToTeam(teamlist, year, callback);
+}
+
+
+
+
+
+
+
+
+function DistrictTeamsAtDetroitStage6(districtteamdata, year, callback) {
+    var eventlist = detroiteventlist.slice(0);
+    if (year == "2018") {
+        addPitsToTeam(districtteamdata, year, function (data) {
+            callback(data);
+        });
+    }
+    else {
+        callback(data);
+    }
+}
+
 function DistrictTeamsAtDetroitStage5(districtteamdata, year, callback) {
     var eventlist = detroiteventlist.slice(0);
     addPlayoffsToTeam(eventlist, districtteamdata, year, function (data) {
-        callback(data);
+        DistrictTeamsAtDetroitStage6(data, year, callback);
     });
 }
 

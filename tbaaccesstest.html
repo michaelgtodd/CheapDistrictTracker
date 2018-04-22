@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>jQuery.getJSON demo</title>
+    <title>District Tracker</title>
     <style>
         img {
             height: 100px;
@@ -29,7 +29,7 @@
                 console.log(data);
                 $('#dump').html("");
                 $('#dump').html("<table id=\"my-table\" class=\"table table-striped table-bordered\" cellspacing=\"0\" width=\"100% \" border=\"1\"></table>");
-                $('#my-table').append("<thead><tr><th>Number</th><th>Name</th><th>Ranking</th><th>OPR</th><th>AVG RP</th><th>Division</th><th>Div Alliance</th><th>Div Playoff Level</th><th>Div Playoff Status</th><th>Awards</th></tr></thead>");
+                $('#my-table').append("<thead><tr><th>Number</th><th>Name</th><th>Ranking</th><th>OPR</th><th>AVG RP</th><th>Division</th><th>Pit</th><th>Div Alliance</th><th>Div Playoff Level</th><th>Div Playoff Status</th><th>Awards</th></tr></thead>");
                 $('my-table').append("<tbody>");
                 var count = 0;
                 var totalrp = 0;
@@ -49,7 +49,8 @@
                         $('<td>').text(element.ranking),
                         $('<td>').text(element.opr),
                         $('<td>').text(element.averagerp),
-                        $('<td>').text(element.division)
+                        $('<td>').text(element.division),
+                        $('<td>').text(element.pit)
                     );
 
                     if (element.playoffdata != null) {
@@ -103,6 +104,8 @@
                 var averageopr = totalopr / count;
                 var districtsummary = "";
                 districtsummary += "Average District RP: " + Math.floor(averagerp * 100) / 100 + " Average District OPR: " + Math.floor(averageopr * 100) / 100 + " Total Awards: " + totalawards;
+                districtsummary += "<br />";
+                districtsummary += "Total Teams: " + count;
                 districtsummary += "<br />";
                 districtsummary += "Division Playoff Advancement - QuarterFinalists: " + totalqf + " SemiFinalists: " + totalsf + " Finalists: " + totalf + " Winners: " + totalw;
                 $('#stats').html(districtsummary);
