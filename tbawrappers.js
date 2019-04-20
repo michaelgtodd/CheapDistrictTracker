@@ -28,7 +28,7 @@ function test(p1) {
 }
 
 function getDistricts(callback) {
-    var APICall = TBABaseURL + "/districts/2018";
+    var APICall = TBABaseURL + "/districts/2019";
     var data = $.getJSON
         (APICall,
         {
@@ -313,7 +313,7 @@ function processAddPitsToTeam(teamlist, year, callback) {
 }
 
 function addPitsToTeam(teamlist, year, callback) {
-    processAddPitsToTeam(teamlist, year, callback);
+    //processAddPitsToTeam(teamlist, year, callback);
 }
 
 
@@ -324,15 +324,15 @@ function addPitsToTeam(teamlist, year, callback) {
 
 
 function DistrictTeamsAtDetroitStage6(districtteamdata, year, callback) {
-    var eventlist = detroiteventlist.slice(0);
-    if (year == "2018") {
-        addPitsToTeam(districtteamdata, year, function (data) {
-            callback(data);
-        });
-    }
-    else {
-        callback(data);
-    }
+    //var eventlist = detroiteventlist.slice(0);
+    //if (year == "2019") {
+    //    addPitsToTeam(districtteamdata, year, function (data) {
+    //        callback(data);
+    //    });
+    //}
+    //else {
+    callback(districtteamdata);
+    //}
 }
 
 function DistrictTeamsAtDetroitStage5(districtteamdata, year, callback) {
