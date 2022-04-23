@@ -1,5 +1,6 @@
 ﻿<!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>District Tracker</title>
@@ -9,26 +10,28 @@
             float: left;
         }
     </style>
-    <link rel="stylesheet" type="text/css" href="jquery.dynatable.css">
+    <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
     <script>
         function setStatus(status) {
             console.log(status);
             $('#statusblock').html(status);
         }
     </script>
-    <script src="./jquery-1.7.2.min.js"></script>
-    <script src="./tbawrappers.js"></script>
-    <script src="./jquery.dynatable.js"></script>
+    <script src="./js/jquery-1.7.2.min.js"></script>
+    <script src="./js/tbawrappers.js"></script>
+    <script src="./js/jquery.dynatable.js"></script>
     <script>
         var year = 2022;
         var district = 'ne';
 
         function populateTeamData(district, year) {
-            getDistrictTeamsAtDetroit(district, year, function (data) {
+            getDistrictTeamsAtDetroit(district, year, function(data) {
                 setStatus("Done loading data.");
                 console.log(data);
-                $('#dump').html("");
-                $('#dump').html("<table id=\"my-table\" class=\"table table-striped table-bordered\" cellspacing=\"0\" width=\"100% \" border=\"1\"></table>");
+                var teamSummary = "";
+                teamSummary += "<h2>Team Data</h2>";
+                teamSummary += "<table id=\"my-table\" class=\"table table-striped table-bordered table-sm\" cellspacing=\"0\" width=\"100% \" border=\"1\"></table>";
+                $('#dump').html(teamSummary);
                 $('#my-table').append("<thead><tr><th>Number</th><th>Name</th><th>Ranking</th><th>OPR</th><th>AVG RP</th><th>Division</th><th>Pit</th><th>Div Alliance</th><th>Div Playoff Level</th><th>Div Playoff Status</th><th>Awards</th></tr></thead>");
                 $('my-table').append("<tbody>");
                 var count = 0;
@@ -39,7 +42,7 @@
                 var totalsf = 0;
                 var totalf = 0;
                 var totalw = 0;
-                $.each(data, function (index, element) {
+                $.each(data, function(index, element) {
                     count++;
                     totalrp += element.averagerp;
                     totalopr += element.opr;
@@ -76,8 +79,7 @@
                         if (element.playoffdata.level == "f" && element.playoffdata.status == "won") {
                             totalw++;
                         }
-                    }
-                    else {
+                    } else {
                         $tr.append(
                             $('<td>').text(""),
                             $('<td>').text(""),
@@ -87,7 +89,7 @@
 
                     var awardtext = "";
                     if (element.awards != null) {
-                        $.each(element.awards, function (index, element) {
+                        $.each(element.awards, function(index, element) {
                             if (index != 0) {
                                 awardtext += "<br />";
                             }
@@ -103,6 +105,7 @@
                 var averagerp = totalrp / count;
                 var averageopr = totalopr / count;
                 var districtsummary = "";
+                districtsummary += "<h2>District Summary</h2>";
                 districtsummary += "Average District RP: " + Math.floor(averagerp * 100) / 100 + " Average District OPR: " + Math.floor(averageopr * 100) / 100 + " Total Awards: " + totalawards;
                 districtsummary += "<br />";
                 districtsummary += "Total Teams: " + count;
@@ -113,8 +116,11 @@
         }
     </script>
 </head>
+
 <body>
-    <div id="yearselector">
+    <h1>The Super-Legit Big-Time Awesome District Tracker</h1>
+    <div id="selector">
+        <b>Season:</b>
         <select id="yearchooser">
             <option value="2022">2022</option>
             <option value="2020">2020</option>
@@ -122,15 +128,16 @@
             <option value="2018">2018</option>
             <option value="2017">2017</option>
         </select>
-    </div>
-    <div id="selector">
+        <b>District:</b>
         <select id="districtchooser"></select>
         <button id="loadbutton">Load Data</button>
     </div>
-    <br />
-    <div id="statusblock"></div>
-    <br />
+    <div id="statusblock">
+        Select a season and district, then press load to pull up the latest Blue Alliance data.
+    </div>
+    </br>
     <div id="stats"></div>
+    </br>
     <div id="dump"></div>
 
     <script>
@@ -142,33 +149,36 @@
                 perPageSelect: false
             },
             readers: {
-                ranking: function (val, record) {
+                ranking: function(val, record) {
                     return parseInt(val.innerHTML);
                 },
-                number: function (val, record) {
+                number: function(val, record) {
                     return parseInt(val.innerHTML);
                 },
-                opr: function (val, record) {
+                opr: function(val, record) {
                     return Math.floor(parseInt(val.innerHTML));
                 },
-                averagerp: function (val, record) {
+                averagerp: function(val, record) {
                     return parseInt(val.innerHTML);
                 }
             }
         });
-        getDistricts(function (data) {
-            $.each(data, function (index, element) {
-                $('#districtchooser').append($('<option>', { value: element.abbreviation, text: element.display_name }));
+        getDistricts(function(data) {
+            $.each(data, function(index, element) {
+                $('#districtchooser').append($('<option>', {
+                    value: element.abbreviation,
+                    text: element.display_name
+                }));
             });
             $("#districtchooser").val(district);
             $("#yearchooser").val(year);
-            $('#districtchooser').on('change', function () {
+            $('#districtchooser').on('change', function() {
                 district = this.value;
             });
-            $('#yearchooser').on('change', function () {
+            $('#yearchooser').on('change', function() {
                 year = this.value;
             });
-            $('#loadbutton').on('click', function () {
+            $('#loadbutton').on('click', function() {
                 populateTeamData(district, year);
             });
             console.log(data);
@@ -176,4 +186,5 @@
     </script>
 
 </body>
+
 </html>
