@@ -62,7 +62,8 @@ function getTeamsAtEvent(eventkey, callback) {
         {
             "X-TBA-Auth-Key": APIKey
         },
-        callback);
+        callback)
+        .error(function(){callback([])});
 }
 
 function getEventRankings(eventkey, callback) {
@@ -72,7 +73,8 @@ function getEventRankings(eventkey, callback) {
         {
             "X-TBA-Auth-Key": APIKey
         },
-        callback);
+        callback)
+        .error(function(){callback([])});
 }
 
 function getEventOPRs(eventkey, callback) {
@@ -82,7 +84,8 @@ function getEventOPRs(eventkey, callback) {
         {
             "X-TBA-Auth-Key": APIKey
         },
-        callback);
+        callback)
+        .error(function(){callback([])});
 }
 
 function getEventAwardData(eventkey, callback) {
@@ -93,7 +96,7 @@ function getEventAwardData(eventkey, callback) {
             "X-TBA-Auth-Key": APIKey
         },
         callback)
-        .error(function () { callback(null); });
+        .error(function(){callback([])});
 }
 
 function getEventPlayoffData(eventkey, callback) {
@@ -103,7 +106,8 @@ function getEventPlayoffData(eventkey, callback) {
         {
             "X-TBA-Auth-Key": APIKey
         },
-        callback);
+        callback)
+        .error(function(){callback([])});
 }
 
 function filterteamlist(teamlist1, teamlist2, eventname) {
@@ -121,7 +125,7 @@ function filterteamlist(teamlist1, teamlist2, eventname) {
 }
 
 function processFilterTeamsAttendingEvents(matchingteams, eventlist, teamlist, year, callback) {
-    if (eventlist[0]) {
+    if (typeof eventlist[0] !== 'undefined') {
         var activeevent = eventlist[0];
         eventlist.splice(0, 1);
         setStatus("Processing event: " + year + activeevent.id);
@@ -131,7 +135,6 @@ function processFilterTeamsAttendingEvents(matchingteams, eventlist, teamlist, y
         });
     }
     else {
-        setStatus("Done processing events.");
         callback(matchingteams);
     }
 }
@@ -141,15 +144,18 @@ function filterteamsattendingevents(eventlist, teamlist, year, callback) {
 }
 
 function AddRankingToTeamObjects(rankingdata, teamlist) {
-    if (rankingdata.rankings != null) {
-        $.each(teamlist, function (index, element) {
-            $.each(rankingdata.rankings, function (index2, element2) {
-                if (element.key == element2.team_key) {
-                    element.ranking = element2.rank;
-                    element.averagerp = element2.sort_orders[0];
-                }
+    if(rankingdata != null)
+    {
+        if (rankingdata.rankings != null) {
+            $.each(teamlist, function (index, element) {
+                $.each(rankingdata.rankings, function (index2, element2) {
+                    if (element.key == element2.team_key) {
+                        element.ranking = element2.rank;
+                        element.averagerp = element2.sort_orders[0];
+                    }
+                });
             });
-        });
+        }
     }
     return teamlist;
 }
@@ -367,6 +373,7 @@ function DistrictTeamsAtDetroitStage2(districtteamdata, year, callback) {
 function DistrictTeamsAtDetroitStage1(districtteamdata, year, callback) {
     var eventlist = detroiteventlist.slice(0);
     filterteamsattendingevents(eventlist, districtteamdata, year, function (data) {
+        console.log("Got into my callback")
         DistrictTeamsAtDetroitStage2(data, year, callback);
     });
 }
