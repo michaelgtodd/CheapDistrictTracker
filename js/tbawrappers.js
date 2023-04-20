@@ -11,6 +11,8 @@ var detroiteventlist = [
     { name: "Carver", id: "carv" },
     { name: "Galileo", id: "gal" },
     { name: "Hopper", id: "hop" },
+    { name: "Johnson", id: "joh"},
+    { name: "Millstein", id: "mil"},
     { name: "Newton", id: "new" },
     { name: "Roebling", id: "roe" },
     { name: "Turing", id: "tur" },
@@ -28,7 +30,7 @@ function test(p1) {
 }
 
 function getDistricts(callback) {
-    var APICall = TBABaseURL + "/districts/2022";
+    var APICall = TBABaseURL + "/districts/2023";
     var data = $.getJSON(APICall, {
             "X-TBA-Auth-Key": APIKey
         },
